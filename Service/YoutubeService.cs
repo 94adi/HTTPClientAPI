@@ -1,6 +1,9 @@
 ﻿using HTTPClientAPI.Models;
 using HTTPClientAPI.Models.Config;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Globalization;
 using System.Text;
 
 namespace HTTPClientAPI.Service
@@ -24,13 +27,14 @@ namespace HTTPClientAPI.Service
 
         public async Task<IEnumerable<YoutubeResult>> GetTop3Videos(YoutubeConfig youtubeConfig)
         {
+            IEnumerable<YoutubeResult> result = new List<YoutubeResult>();
+
             var youtubeRequestURI = BuildRequestURL(youtubeConfig);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, youtubeRequestURI)
             {
                 Headers =
                 {
-                    { "Authorization", "Bearer " + _options.API_KEY },
                     { "Accept", "application/json" }
                 }
             };
@@ -43,7 +47,14 @@ namespace HTTPClientAPI.Service
 
             var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
-            return null;
+            MemoryStream contentMemoryStream = (MemoryStream)contentStream;
+
+            var content = Encoding.UTF8.GetString((contentMemoryStream).ToArray());
+
+            if(content != null)
+                result = ConvertJSONResponseToYoutubeResult(content);
+
+            return result;
         }
 
         private string BuildRequestURL(YoutubeConfig youtubeConfig)
@@ -74,6 +85,56 @@ namespace HTTPClientAPI.Service
         private YoutubeConfig GetConfigBasedOnKeyword(string keyword)
         {
             return null;
+        }
+
+        private IEnumerable<YoutubeResult> ConvertJSONResponseToYoutubeResult(string JSON)
+        {
+            dynamic json = JsonConvert.DeserializeObject(JSON);
+            var items = json["items"];
+
+            var resultCollection = new List<YoutubeResult>();
+
+            foreach(var item in items)
+            {
+                var youtubeResult = ConvertItemToYoutubeResult(item);
+                resultCollection.Add(youtubeResult);
+            }
+
+            return resultCollection;
+        }
+
+        private YoutubeResult ConvertItemToYoutubeResult(object item)
+        {
+            YoutubeResult youtubeResult = new YoutubeResult();
+            dynamic currentItem = item;
+
+            youtubeResult.VideoId = currentItem["id"]["videoId"];
+
+            currentItem = currentItem["snippet"];
+
+            youtubeResult.Title = currentItem["title"];
+
+            youtubeResult.Description = currentItem["description"];
+
+            youtubeResult.Thumbnail = new YoutubeThumbnail
+            {
+                Url = currentItem["thumbnails"]["high"]["url"],
+                Width = currentItem["thumbnails"]["high"]["width"],
+                Height = currentItem["thumbnails"]["high"]["height"]
+            };
+
+            try
+            {
+                string publishedAt = currentItem["publishedAt"];
+                youtubeResult.PublishedAt = DateTime.ParseExact(publishedAt,
+                            "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            }
+            catch (Exception ex)
+            {
+                youtubeResult.PublishedAt = DateTime.MinValue;
+            }
+
+            return youtubeResult;
         }
 
     }
