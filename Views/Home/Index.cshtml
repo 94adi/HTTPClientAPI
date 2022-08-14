@@ -1,0 +1,28 @@
+﻿@model IndexVM
+
+@{
+    ViewData["Title"] = "API";
+}
+
+
+<h1>Youtube API</h1>
+
+<form method="post">
+
+<div class="form-group row">
+    <div class="col-4">
+        Keyword
+    </div>
+    <div class="col-8">
+        @Html.DropDownListFor(m => m.Keyword.Id, Model.KeywordsList, "-Select a Keyword-",
+        new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-3">
+        <button type="submit" class="btn btn-primary form-control">Search</button>
+    </div>
+</div>
+
+</form>
