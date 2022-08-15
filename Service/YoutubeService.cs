@@ -116,7 +116,7 @@ namespace HTTPClientAPI.Service
 
             youtubeResult.Description = currentItem["description"];
 
-            youtubeResult.Thumbnail = new YoutubeThumbnail
+            youtubeResult.Thumbnail = new Thumbnail
             {
                 Url = currentItem["thumbnails"]["high"]["url"],
                 Width = currentItem["thumbnails"]["high"]["width"],

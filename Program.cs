@@ -9,6 +9,7 @@ builder.Services.Configure<YoutubeOptions>(
     builder.Configuration.GetSection(YoutubeOptions.Option));
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IYoutubeService, YoutubeService>();
+builder.Services.AddScoped<IWikipediaService, WikipediaService>();
 
 var app = builder.Build();
 

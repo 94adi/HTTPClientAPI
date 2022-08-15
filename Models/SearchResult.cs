@@ -6,5 +6,7 @@
         public string Query { get; set; }
         public IEnumerable<YoutubeResult> YoutubeContent { get; set; }
         public string YoutubeContentJSON { get; set; }
+        public WikipediaResult WikipediaContent { get; set; }
+        public string WikipediaContentJSON { get; set; }
     }
 }

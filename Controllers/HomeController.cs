@@ -9,12 +9,15 @@ namespace HTTPClientAPI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IYoutubeService _youtubeService;
+        private readonly IWikipediaService _wikipediaService;
 
         public HomeController(ILogger<HomeController> logger,
-                              IYoutubeService youtubeService)
+                              IYoutubeService youtubeService,
+                              IWikipediaService wikipediaService)
         {
             _logger = logger;
             _youtubeService = youtubeService;
+            _wikipediaService = wikipediaService;
         }
 
         [HttpGet]
@@ -45,6 +48,9 @@ namespace HTTPClientAPI.Controllers
             searchResult.YoutubeContent = await _youtubeService.GetTop3Videos(youtubeConfig);
             searchResult.YoutubeContentJSON = JsonConvert.SerializeObject(searchResult.YoutubeContent);
 
+            searchResult.WikipediaContent = await _wikipediaService.GetHighlight(keyword);
+            searchResult.WikipediaContentJSON = JsonConvert.SerializeObject(searchResult.WikipediaContent);
+
             return RedirectToAction("Result", searchResult);
         }
 
@@ -53,6 +59,9 @@ namespace HTTPClientAPI.Controllers
         {
             if(searchResult.YoutubeContentJSON != null)
                 searchResult.YoutubeContent = JsonConvert.DeserializeObject<List<YoutubeResult>>(searchResult.YoutubeContentJSON);
+
+            if (searchResult.WikipediaContentJSON != null)
+                searchResult.WikipediaContent = JsonConvert.DeserializeObject<WikipediaResult>(searchResult.WikipediaContentJSON);
            
             return View(searchResult);
         }
