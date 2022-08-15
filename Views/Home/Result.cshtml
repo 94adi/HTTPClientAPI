@@ -1,3 +1,8 @@
 ﻿@model SearchResult
 
-<h1>@Model.YoutubeContent</h1>
+@{
+    foreach (var video in Model.YoutubeContent)
+    {
+        <h6>@video.Title</h6>
+    }
+}

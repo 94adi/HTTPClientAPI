@@ -13,6 +13,8 @@ namespace HTTPClientAPI.Models
         public IEnumerable<Keyword> Keywords { get { return _keywords; } }
         public IEnumerable<YoutubeConfig> YoutubeConfigs { get { return _youtubeConfigs; } }
 
+        public SearchResult SearchResult { get; set; }
+
         public IndexVM()
         {
             //in memory data
@@ -69,8 +71,5 @@ namespace HTTPClientAPI.Models
             var result = _youtubeConfigs.Where(i => i.Id == id).FirstOrDefault();
             return result;
         }
-        //youtube section data
-        //wikipedia section data,
-        //weather section data
     }
 }

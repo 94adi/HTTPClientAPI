@@ -1,5 +1,6 @@
 ﻿namespace HTTPClientAPI.Models
 {
+    [Serializable]
     public class YoutubeResult
     {
         public string VideoId { get; set; }
@@ -9,6 +10,7 @@
         public string Description { get; set; }
     }
 
+    [Serializable]
     public class YoutubeThumbnail
     {
         public string Url { get; set; }

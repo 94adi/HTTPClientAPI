@@ -1,8 +1,7 @@
 ﻿using HTTPClientAPI.Models;
 using HTTPClientAPI.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace HTTPClientAPI.Controllers
 {
@@ -28,32 +27,34 @@ namespace HTTPClientAPI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(IndexVM model)
+        public async Task<IActionResult> Index(IndexVM model)
         {
-            if(model.Keyword.Id == null)
+            if(model == null || model.Keyword == null)
             {
                 return View(model);
             }
 
             SearchResult searchResult = new SearchResult();
-            searchResult.Query = model.GetKeywordById(model.Keyword.Id).Value;
+
+            var keyword = model.GetKeywordById(model.Keyword.Id);
+
+            searchResult.Query = keyword?.Value == null ? "" : keyword.Value;
+
             var youtubeConfig = model.GetYoutubeConfigById(model.Keyword.Id);
 
-            var youtubeResult = _youtubeService.GetTop3Videos(youtubeConfig);
-            //use api
+            searchResult.YoutubeContent = await _youtubeService.GetTop3Videos(youtubeConfig);
+            searchResult.YoutubeContentJSON = JsonConvert.SerializeObject(searchResult.YoutubeContent);
 
-
-            searchResult.YoutubeContent = "content";
-            //generate model /w data
             return RedirectToAction("Result", searchResult);
         }
 
         [HttpGet]
-        public IActionResult Result(SearchResult model)
+        public IActionResult Result(SearchResult searchResult)
         {
-            return View(model);
+            if(searchResult.YoutubeContentJSON != null)
+                searchResult.YoutubeContent = JsonConvert.DeserializeObject<List<YoutubeResult>>(searchResult.YoutubeContentJSON);
+           
+            return View(searchResult);
         }
-
-
     }
 }
