@@ -8,6 +8,8 @@ using System.Text;
 
 namespace HTTPClientAPI.Service
 {
+    //For more info: https://developers.google.com/youtube/v3/docs/search/list
+
     public class YoutubeService : IYoutubeService
     {
         private readonly IHttpClientFactory _httpClientFactory;

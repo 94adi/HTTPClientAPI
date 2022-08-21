@@ -10,14 +10,17 @@ namespace HTTPClientAPI.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IYoutubeService _youtubeService;
         private readonly IWikipediaService _wikipediaService;
+        private readonly IWeatherService _weatherService;
 
         public HomeController(ILogger<HomeController> logger,
                               IYoutubeService youtubeService,
-                              IWikipediaService wikipediaService)
+                              IWikipediaService wikipediaService,
+                              IWeatherService weatherService)
         {
             _logger = logger;
             _youtubeService = youtubeService;
             _wikipediaService = wikipediaService;
+            _weatherService = weatherService;
         }
 
         [HttpGet]
@@ -51,6 +54,9 @@ namespace HTTPClientAPI.Controllers
             searchResult.WikipediaContent = await _wikipediaService.GetHighlight(keyword);
             searchResult.WikipediaContentJSON = JsonConvert.SerializeObject(searchResult.WikipediaContent);
 
+            searchResult.WeatherContent = await _weatherService.GetWeather(keyword);
+            searchResult.WeatherContentJSON = JsonConvert.SerializeObject(searchResult.WeatherContent);
+
             return RedirectToAction("Result", searchResult);
         }
 
@@ -62,6 +68,9 @@ namespace HTTPClientAPI.Controllers
 
             if (searchResult.WikipediaContentJSON != null)
                 searchResult.WikipediaContent = JsonConvert.DeserializeObject<WikipediaResult>(searchResult.WikipediaContentJSON);
+
+            if (searchResult.WeatherContentJSON != null)
+                searchResult.WeatherContent = JsonConvert.DeserializeObject<WeatherResult>(searchResult.WeatherContentJSON);
            
             return View(searchResult);
         }

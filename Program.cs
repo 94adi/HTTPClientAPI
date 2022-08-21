@@ -7,9 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<YoutubeOptions>(
     builder.Configuration.GetSection(YoutubeOptions.Option));
+builder.Services.Configure<WeatherOptions>(
+    builder.Configuration.GetSection(WeatherOptions.Option));
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IYoutubeService, YoutubeService>();
 builder.Services.AddScoped<IWikipediaService, WikipediaService>();
+builder.Services.AddScoped<IWeatherService, WeatherService>();
 
 var app = builder.Build();
 
