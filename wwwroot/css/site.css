@@ -16,3 +16,18 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+#custom-card-body-height{
+    height:270px;
+}
+
+#watch-btn {
+    position: absolute;
+    top: 89%;
+    width: 40%;
+    margin: 0 25%;
+    background-color: #fd0d0d;
+    border-color: #f8f9fa;
+    border-radius: 12px;
+}
+

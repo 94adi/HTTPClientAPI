@@ -7,6 +7,11 @@ namespace HTTPClientAPI.Controllers
 {
     public class HomeController : Controller
     {
+        //TO DO:
+        //1. Handle possible exception such the application doesn't break if any of the APIs don't work
+        //2. Add additional in memory data and consider refactor where necessary with keyword/youtube config
+        //3. Add data in a view (Result.cshtml)
+
         private readonly ILogger<HomeController> _logger;
         private readonly IYoutubeService _youtubeService;
         private readonly IWikipediaService _wikipediaService;

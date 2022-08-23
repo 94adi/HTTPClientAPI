@@ -1,10 +1,43 @@
 ﻿@model SearchResult
 
-@{
-    foreach (var video in Model.YoutubeContent)
-    {
-        <h6>@video.Title</h6>
-    }
+<div class="container">
+    <div class="row">
+        @{
+            foreach (var video in Model.YoutubeContent)
+            {
+                    string videoUrl = "https://www.youtube.com/watch?v=" + video.VideoId;
+                        <div class="col">
+                                <div class="card" style="width: 18rem;">
+                                    <img src="@video.Thumbnail.Url" class="card-img-top" alt="@video.Title">
+                                    <div class="card-body" id="custom-card-body-height">
+                                        <h5 class="card-title">@video.Title</h5>
+                                        <p class="card-text">@video.Description</p>
+                                    <a href=@videoUrl class="btn btn-primary" id="watch-btn" target="_blank">Watch</a>
+                                    </div>
+                                </div>
+                        </div>
+            }
+        }
+    </div>
+</div>
 
-    <p>@Model.WeatherContent.CelsiusDegrees degrees</p>
-}
+<hr />
+
+<div class="row">
+    <p>
+        <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">About @Model.Query</a>
+    </p>
+    <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample1">
+            <div class="card card-body">
+                @Model.WikipediaContent.Description
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <img src=@Model.WikipediaContent.Thumbnail.Url width=@Model.WikipediaContent.Thumbnail.Width height=@Model.WikipediaContent.Thumbnail.Height class="card-img-top" />
+</div>
+
+<hr />

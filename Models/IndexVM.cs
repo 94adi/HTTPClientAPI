@@ -11,6 +11,7 @@ namespace HTTPClientAPI.Models
         public IEnumerable<SelectListItem>? KeywordsList { get; private set; }
         public Keyword? Keyword { get; set; }
         public IEnumerable<Keyword> Keywords { get { return _keywords; } }
+        //extra params for youtube api
         public IEnumerable<YoutubeConfig> YoutubeConfigs { get { return _youtubeConfigs; } }
 
         public SearchResult SearchResult { get; set; }
@@ -49,7 +50,8 @@ namespace HTTPClientAPI.Models
                         Id = 1,
                         Value = "los angeles"
                     }           
-                } 
+                }
+                //TO DO: Add aditional cities with coordinates
             };
 
             KeywordsList = Keywords?.Select(i => new SelectListItem
