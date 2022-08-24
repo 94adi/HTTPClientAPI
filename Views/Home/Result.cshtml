@@ -6,11 +6,12 @@
             foreach (var video in Model.YoutubeContent)
             {
                     string videoUrl = "https://www.youtube.com/watch?v=" + video.VideoId;
+                    string title = @video.Title.Substring(0, Math.Min(video.Title.Length, 60));
                         <div class="col">
                                 <div class="card" style="width: 18rem;">
                                     <img src="@video.Thumbnail.Url" class="card-img-top" alt="@video.Title">
                                     <div class="card-body" id="custom-card-body-height">
-                                        <h5 class="card-title">@video.Title</h5>
+                                        <h5 class="card-title">@title</h5>
                                         <p class="card-text">@video.Description</p>
                                     <a href=@videoUrl class="btn btn-primary" id="watch-btn" target="_blank">Watch</a>
                                     </div>
@@ -41,3 +42,38 @@
 </div>
 
 <hr />
+
+<div class="wrapper">
+    <div class="widget-container">
+        <div class="top-left">
+            <h1 class="city" id="weather-text">@Model.Query weather</h1>
+            <h2 id="day">@DateTime.Today</h2>
+            <h3 id="date">@DateTime.Now</h3>
+            <h3 id="time">@DateTime.UtcNow</h3>
+            <p class="geo"></p>
+        </div>
+        <div class="top-right">
+            <h1 id="weather-status weather-text">Weather / Weather Status</h1>
+            <h1 id="weather-status weather-text">@Model.WeatherContent.WeatherCondition.Text</h1>
+            <img src="@Model.WeatherContent.WeatherCondition.IconURL">
+        </div>
+        <div class="horizontal-half-divider"></div>
+        <div class="bottom-left">
+            <h1 id="temperature">0</h1>
+            <h2 id="celsius">&degC</h2>
+            <h2 id="temp-divider">/</h2>
+            <h2 id="fahrenheit">&degF</h2>
+        </div>
+        <div class="vertical-half-divider"></div>
+        <div class="bottom-right">
+            <div class="other-details-key">
+                <p>Wind Speed</p>
+                <p>Humidity</p>
+            </div>
+            <div class="other-details-values">
+                <p class="windspeed">@Model.WeatherContent.WindKph Km/h</p>
+                <p class="humidity">@Model.WeatherContent.HumidityIndex %</p>
+            </div>
+        </div>
+    </div>
+</div>
