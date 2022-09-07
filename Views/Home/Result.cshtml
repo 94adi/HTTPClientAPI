@@ -54,25 +54,28 @@
         </div>
         <div class="top-right">
             <h1 id="weather-status weather-text">Weather / Weather Status</h1>
-            <h1 id="weather-status weather-text">@Model.WeatherContent.WeatherCondition.Text</h1>
-            <img src="@Model.WeatherContent.WeatherCondition.IconURL">
+            <h1 id="weather-status weather-text">@Model.WeatherContent.Status</h1>
         </div>
         <div class="horizontal-half-divider"></div>
-        <div class="bottom-left">
-            <h1 id="temperature">0</h1>
+        <div class="bottom-left celsius-temp-section">
+            <h1 id="temperature">@Model.WeatherContent.CelsiusDegrees</h1>
             <h2 id="celsius">&degC</h2>
-            <h2 id="temp-divider">/</h2>
-            <h2 id="fahrenheit">&degF</h2>
         </div>
         <div class="vertical-half-divider"></div>
         <div class="bottom-right">
             <div class="other-details-key">
                 <p>Wind Speed</p>
                 <p>Humidity</p>
+                <p>Feels like</p>
+                <P>Celsius Max</p>
+                <p>Celsius Min</p>
             </div>
             <div class="other-details-values">
                 <p class="windspeed">@Model.WeatherContent.WindKph Km/h</p>
                 <p class="humidity">@Model.WeatherContent.HumidityIndex %</p>
+                <p>@Model.WeatherContent.FeelsLikeCelsius</p>
+                <p>@Model.WeatherContent.CelsiusMax</p>
+                <p>@Model.WeatherContent.CelsiusMin</p>
             </div>
         </div>
     </div>

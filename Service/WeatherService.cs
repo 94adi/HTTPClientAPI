@@ -6,6 +6,9 @@ using System.Text;
 
 namespace HTTPClientAPI.Service
 {
+
+    //API: https://openweathermap.org/
+
     public class WeatherService : IWeatherService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -20,7 +23,7 @@ namespace HTTPClientAPI.Service
         public async Task<WeatherResult> GetWeather(Keyword keyword)
         {
             var query = keyword.Value;
-            query = query.Replace(" ", "_");
+
             var requestURL = BuildRequestURL(query);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestURL);
@@ -45,29 +48,39 @@ namespace HTTPClientAPI.Service
         private string BuildRequestURL(string query)
         {
             var baseURL = StaticDetails.WeatherBaseURI;
-            var URL = $"{baseURL}key={_options.API_KEY}&q={query}&api=no";
+            var URL = $"{baseURL}q={query}&appid={_options.API_KEY}&units=metric";
             return URL;
         }
 
         private WeatherResult ConvertJSONResponseToWeatherResult(string JSONdata)
         {
             var result = new WeatherResult();
-            dynamic json = JsonConvert.DeserializeObject(JSONdata);
-            json = json["current"];
-            result.CelsiusDegrees = (float)json["temp_c"];
-            result.FahrenheitDegrees = (float)json["temp_f"];
-            result.isDay = (bool)json["is_day"];
-            result.HumidityIndex = (int)json["humidity"];
-            result.UV = (float)json["uv"];
-            result.WindDir = json["wind_dir"];
-            result.WindKph = json["wind_kph"];
-            result.FeelsLikeCelsius = (float)json["feelslike_c"];
-            result.FeelsLikeFahrenheit = (float)json["feelslike_f"];
-            result.WeatherCondition = new WeatherCondition
-                                        {
-                                            Text = json["condition"]["text"],
-                                            IconURL = json["condition"]["icon"]
-                                        };
+
+            float floatValueStore;
+            int intValueStore;
+            long longValueStore;
+            try
+            {
+                dynamic json = JsonConvert.DeserializeObject(JSONdata);
+                dynamic main = json["main"];
+                dynamic wind = json["wind"];
+                dynamic sys = json["sys"];
+                dynamic status = json["weather"][0]["main"];
+
+                result.CelsiusDegrees = (float.TryParse((string)main["temp"], out floatValueStore)) == true ? floatValueStore : result.CelsiusDegrees;
+                result.FeelsLikeCelsius = (float.TryParse((string)main["feels_like"], out floatValueStore)) == true ? floatValueStore : result.FeelsLikeCelsius;
+                result.CelsiusMax = (float.TryParse((string)main["temp_max"], out floatValueStore)) == true ? floatValueStore : result.CelsiusMax;
+                result.CelsiusMin = (float.TryParse((string)main["temp_min"], out floatValueStore)) == true ? floatValueStore : result.CelsiusMin;
+                result.HumidityIndex = (int.TryParse((string)main["humidity"], out intValueStore)) == true ? intValueStore : result.HumidityIndex;
+                result.WindDeg = (string)wind["deg"];
+                result.WindKph = (string)wind["speed"];
+                result.Status = (string)status;
+            }
+            catch(Exception e)
+            {
+                //log exception
+            }
+
             return result;
 
         }

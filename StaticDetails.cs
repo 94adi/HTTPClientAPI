@@ -6,7 +6,7 @@
 
         public const string WikipediaBaseURI = "https://en.wikipedia.org/api/rest_v1/page/summary/";
 
-        public const string WeatherBaseURI = "http://api.weatherapi.com/v1/current.json?";
+        public const string WeatherBaseURI = "https://api.openweathermap.org/data/2.5/weather?";
 
         public const int YOUTUBE_MAX_RESULTS = 3;
     }
